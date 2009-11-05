@@ -12,7 +12,17 @@ mkdir -p ~/.yukon/system
 cp yukon/sysconf ~/.yukon/system/default
 cp confs/yukon/yukon.conf ~/.yukon/conf
 
+Build+run Yunikorn (MJPEG-streamer):
+
+open project with netbeans
+compile project
+
+cd yunikorn/dist
+./mjpegserver.sh
+
+
 Running:
 
 cd darkplaces
 yukon ./darkplaces-linux-686-glx
+Press F8
