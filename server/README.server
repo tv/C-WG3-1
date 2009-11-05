@@ -1,0 +1,18 @@
+Install (ubuntu 9.10 32bit):
+
+sudo apt-get install build-essential libx11-dev libgl1-mesa-dev yasm
+
+cd seom
+./configure && make && sudo make install
+cd ../yukon
+./configure && make && sudo make install
+cd ..
+
+mkdir -p ~/.yukon/system
+cp yukon/sysconf ~/.yukon/system/default
+cp confs/yukon/yukon.conf ~/.yukon/conf
+
+Running:
+
+cd darkplaces
+yukon ./darkplaces-linux-686-glx
