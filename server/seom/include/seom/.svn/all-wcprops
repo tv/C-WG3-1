@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/seom/!svn/ver/196/branches/packetized-stream/include/seom
+END
+base.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/seom/!svn/ver/196/branches/packetized-stream/include/seom/base.h
+END
+stream.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/seom/!svn/ver/196/branches/packetized-stream/include/seom/stream.h
+END
+codec.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/seom/!svn/ver/196/branches/packetized-stream/include/seom/codec.h
+END
+packet.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/seom/!svn/ver/196/branches/packetized-stream/include/seom/packet.h
+END

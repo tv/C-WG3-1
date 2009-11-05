@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/yukon/!svn/ver/157/branches/rewrite/tools
+END
+yukon.conf
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/yukon/!svn/ver/157/branches/rewrite/tools/yukon.conf
+END
+post-install-check.sh
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/yukon/!svn/ver/157/branches/rewrite/tools/post-install-check.sh
+END

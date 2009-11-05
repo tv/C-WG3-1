@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/seom/!svn/ver/196/branches/packetized-stream/src
+END
+packet.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/seom/!svn/ver/195/branches/packetized-stream/src/packet.c
+END
+stream.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/seom/!svn/ver/196/branches/packetized-stream/src/stream.c
+END
+codec.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/seom/!svn/ver/196/branches/packetized-stream/src/codec.c
+END

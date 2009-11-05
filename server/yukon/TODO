@@ -1,0 +1,3 @@
+- Create an automated test suite. I've noticed a lot of crashing lately
+  on my own system, which I plan on investigating w/ valgrind.
+- Fix spelling!

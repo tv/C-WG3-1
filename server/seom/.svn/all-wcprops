@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/seom/!svn/ver/196/branches/packetized-stream
+END
+test.c
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/seom/!svn/ver/196/branches/packetized-stream/test.c
+END
+configure
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/seom/!svn/ver/177/branches/packetized-stream/configure
+END
+LICENSE
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/seom/!svn/ver/177/branches/packetized-stream/LICENSE
+END
+TODO
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/seom/!svn/ver/177/branches/packetized-stream/TODO
+END
+INSTALL
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/seom/!svn/ver/177/branches/packetized-stream/INSTALL
+END
+seom.pc.in
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/seom/!svn/ver/177/branches/packetized-stream/seom.pc.in
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/seom/!svn/ver/196/branches/packetized-stream/Makefile
+END

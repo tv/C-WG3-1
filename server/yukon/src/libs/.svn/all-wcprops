@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/yukon/!svn/ver/157/branches/rewrite/src/libs
+END
+libX11.c
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/yukon/!svn/ver/157/branches/rewrite/src/libs/libX11.c
+END
+libGL.c
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/yukon/!svn/ver/157/branches/rewrite/src/libs/libGL.c
+END
