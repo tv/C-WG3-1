@@ -1,3 +1,4 @@
 inputserver
 *.o
 Makefile
+moc_*

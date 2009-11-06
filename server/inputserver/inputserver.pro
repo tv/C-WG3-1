@@ -7,8 +7,11 @@ TARGET =
 DEPENDPATH += .
 INCLUDEPATH += .
 
+CONFIG += qt x11
+
+unix:LIBS += -lXtst
+
 QT += network
-QT += X11Info
 
 # Input
 HEADERS += listener.h

@@ -13,37 +13,30 @@ Listener::~Listener()
     udpSocket.close();
 }
 
+uint Listener::parseKeycode(QByteArray string)
+{
+    uint key = XStringToKeysym(string.trimmed().data());
+    
+    return key;
+}
+
 void Listener::processPendingDatagrams()
 {
-    cout << "socketti valmis, ehkä" << endl;
     do {
-      QByteArray datagram;
-      datagram.resize(udpSocket.pendingDatagramSize());
-      QHostAddress sender;
-      quint16 senderPort;
+        QByteArray datagram;
+        datagram.resize(udpSocket.pendingDatagramSize());
+        QHostAddress sender;
+        quint16 senderPort;
 
-      udpSocket.readDatagram(datagram.data(), datagram.size(),
-			      &sender, &senderPort);
-
-      //processTheDatagram(datagram);
+        udpSocket.readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
+    
+        uint keycode = parseKeycode(datagram);
+        
+        cout << "tuli " << datagram.trimmed().data() << " - " << keycode << endl;
       
-      XKeyEvent ev;
-      ev.type = KeyPress;
-      ev.display = QX11Info::display();
-      ev.window = QX11Info::appRootWindow(); // ok, let's guess some values
-      ev.root = QX11Info::appRootWindow();   // I don't know whether these have to be set
-      ev.subwindow = None;       // to these values, but it seems to work, hmm
-      ev.time = CurrentTime;
-      ev.x = 0;
-      ev.y = 0;
-      ev.x_root = 0;
-      ev.y_root = 0;
-      ev.state = 0;
-      ev.keycode = XStringToKeysym( '?' );
-      if( ev.keycode == NoSymbol )
-          return;
-      ev.same_screen = true;
-      XSendEvent( QX11Info::display(), InputFocus, false, 0, ( XEvent* )&ev );
+        XTestFakeKeyEvent( QX11Info::display(), keycode, true, CurrentTime );
+      
+        XTestFakeKeyEvent( QX11Info::display(), keycode, false, CurrentTime );
       
     } while (udpSocket.hasPendingDatagrams());
 }
