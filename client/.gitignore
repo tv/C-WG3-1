@@ -1,0 +1,5 @@
+Client
+Makefile
+*.o
+moc_*
+vlc-log.txt
