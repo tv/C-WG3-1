@@ -12,8 +12,6 @@
 #include <QX11Info>
 #include <iostream>
 
-#include "VideoStreamer.h"
-
 #include <qthread.h>
 
 
@@ -29,11 +27,6 @@ class InputListener: public QThread
         uint parseKeycode(QByteArray string);
     private:
         QUdpSocket *udpSocket;
-        VideoStreamer videoStream;
-        bool    videoStreamStarted;
-    signals:
-        void startVideoStream(quint32 ip);
-
 };
 
 #endif // INPUTLISTENER_H
