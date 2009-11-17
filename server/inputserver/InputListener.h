@@ -1,12 +1,14 @@
 #ifndef INPUTLISTENER_H
 #define INPUTLISTENER_H
 
-
+#include <QtGui>
 #include <QtNetwork>
 #include <QObject>
 #include <QUdpSocket>
 #include <QKeyEvent>
+#include <QEvent>
 #include <QHostAddress>
+#include <QByteArray>
 #include <X11/Xlib.h>
 #include <X11/extensions/XTest.h>
 #include <QX11Info>
@@ -27,12 +29,14 @@ class InputListener: public QObject
     public:
         InputListener(QObject * parent = 0);
         ~InputListener();
-        quint32 parseKeyCode(QByteArray string);
+        
     private slots:
+        
         void processPendingDatagrams();
         
     private:
-        QUdpSocket udpSocket;
+        quint32 parseKeycode(QByteArray string);
+        QUdpSocket *udpSocket;
         
 };
 
