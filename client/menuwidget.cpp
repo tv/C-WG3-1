@@ -46,5 +46,5 @@ void MenuWidget::askAddress()
 
 void MenuWidget::startGame()
 {
-    emit enterGameState("E:\\Documents\\Kurssit\\MMJ\\Qt_client\\Client\\debug\\test.avi");
+    emit enterGameState("http://127.0.0.1:3022/localhost/stream");
 }

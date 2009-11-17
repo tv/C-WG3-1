@@ -1,14 +1,8 @@
 #include "VLCWidget.h"
 
 /* libVLC and Qt sample code
- * Copyright © 2009 Alexander Maringer <maringer@maringer-it.de>
+ * Copyright ï¿½ 2009 Alexander Maringer <maringer@maringer-it.de>
  */
-
-#include <QVBoxLayout>
-#include <QPushButton>
-#include <QSlider>
-#include <QTimer>
-#include <QFrame>
 
 VLCWidget::VLCWidget(QString file, QStatusBar *statusBar, QWidget *parent)
 : QWidget(parent)
@@ -16,7 +10,7 @@ VLCWidget::VLCWidget(QString file, QStatusBar *statusBar, QWidget *parent)
     //preparation of the vlc command
     const char * const vlc_args[] = {
               "-I", "dummy", /* Don't use any interface */
-              "--ignore-config", /* Don't use VLC's config */
+      //        "--ignore-config", /* Don't use VLC's config */
               "--extraintf=logger", //log anything
               "--verbose=2", //be much more verbose then normal for debugging purpose
               "--plugin-path=C:\\Program Files (x86)\\VLC\\plugins\\" };
@@ -108,7 +102,7 @@ void VLCWidget::playFile(QString file)
     // /!\ Please note /!\
     //
     // passing the widget to the lib shows vlc at which position it should show up
-    // vlc automatically resizes the video to the ´given size of the widget
+    // vlc automatically resizes the video to the ï¿½given size of the widget
     // and it even resizes it, if the size changes at the playing
 
     //Get our media instance to use our window

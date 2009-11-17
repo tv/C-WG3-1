@@ -14,5 +14,5 @@ unix:LIBS += -lXtst
 QT += network
 
 # Input
-HEADERS += listener.h
-SOURCES += listener.cpp main.cpp
+HEADERS += InputListener.h VideoStreamer.h
+SOURCES += InputListener.cpp VideoStreamer.cpp main.cpp
