@@ -8,6 +8,7 @@
 #include <QHBoxLayout>
 #include <QString>
 #include <QInputDialog>
+#include <QApplication>
 #include "clientwindow.h"
 
 class MenuWidget : public QWidget
@@ -18,7 +19,7 @@ public:
     ~MenuWidget();
 private:
 public slots:
-    void startGame();
+    void startGame(QString address);
     void askAddress();
 
 signals:
