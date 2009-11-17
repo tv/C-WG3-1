@@ -12,21 +12,28 @@
 #include <QX11Info>
 #include <iostream>
 
-#include <qthread.h>
-
-
-class InputListener: public QThread
+class InputListener: public QObject
 {
     Q_OBJECT
+    
+    static const char KEYPRESS =       0x00;
+    static const char KEYRELEASE =     0x01;
+    static const char MOUSEX =         0x02;
+    static const char MOUSEY =         0x03;
+    static const char MOUSE1PRESS =    0x04;
+    static const char MOUSE1RELEASE =  0x05;
+    static const char MOUSE2PRESS =    0x06;
+    static const char MOUSE2RELEASE =  0x07;
     public:
-        virtual void run();
         InputListener(QObject * parent = 0);
         ~InputListener();
+        quint32 parseKeyCode(QByteArray string);
     private slots:
         void processPendingDatagrams();
-        uint parseKeycode(QByteArray string);
+        
     private:
-        QUdpSocket *udpSocket;
+        QUdpSocket udpSocket;
+        
 };
 
 #endif // INPUTLISTENER_H

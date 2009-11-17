@@ -36,8 +36,6 @@ public:
     ~VLCWidget();
     void raise(libvlc_exception_t * ex);
 
-public slots:
-    //void playFile(QString file);
 };
 
 #endif // VLCWIDGET_H

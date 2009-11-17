@@ -7,12 +7,11 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    cout << "socketti valmis, ehkä" << endl;
+    
     QApplication app(argc, argv);
     
-    InputListener *inputListener = new InputListener();
+    InputListener inputListener;
     
-    inputListener->run();
     
     return app.exec();
 }

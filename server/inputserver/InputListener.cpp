@@ -2,48 +2,78 @@
 
 using namespace std;
 
-InputListener::InputListener(QObject* parent): QThread(parent)
+InputListener::InputListener(QObject* parent): QObject(parent)
 {
+    cout << "socketti valmis, ehkä" << endl;
+    udpSocket.bind(45455);
+    connect(&udpSocket, SIGNAL(readyRead()), this, SLOT(processPendingDatagrams()));
 }
 
 InputListener::~InputListener()
 {
-    udpSocket->close();
+    udpSocket.close();
 }
 
-void InputListener::run()
+quint32 InputListener::parseKeyCode(QByteArray string)
 {
-    udpSocket = new QUdpSocket();
-    udpSocket->bind(45454);
-    connect(udpSocket, SIGNAL(readyRead()), this, SLOT(processPendingDatagrams()));
-}
-uint InputListener::parseKeycode(QByteArray string)
-{
-    uint key = XStringToKeysym(string.trimmed().data());
+    cout << "ei toimi ei" << endl;
+    QKeyEvent(QEvent::KeyPress, Qt::Key_F1, Qt::NoModifier);
     
-    return key;
+    return eventti.nativeVirtualKey();
 }
 
 void InputListener::processPendingDatagrams()
 {
-    qDebug("Incoming Datagrams");
     do {
         QByteArray datagram;
-        datagram.resize(udpSocket->pendingDatagramSize());
+        datagram.resize(udpSocket.pendingDatagramSize());
         QHostAddress sender;
         quint16 senderPort;
         
-        qDebug("Reading data");
-
-        udpSocket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
+        udpSocket.readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
         
-        uint keycode = parseKeycode(datagram);
+        uint keycode = parseKeyCode(datagram);
         
         cout << "tuli " << datagram.trimmed().data() << " - " << keycode << endl;
       
-        //XTestFakeKeyEvent( QX11Info::display(), keycode, true, CurrentTime );
+        switch(datagram[0]){
+            case KEYPRESS:
+                XTestFakeKeyEvent( QX11Info::display(), parseKeyCode(datagram.right(1)), true, CurrentTime );
+                break;
+                
+            case KEYRELEASE:
+                XTestFakeKeyEvent( QX11Info::display(), parseKeyCode(datagram.right(1)), false, CurrentTime );
+                break;
+                
+            case MOUSEX:
+                XTestFakeKeyEvent( QX11Info::display(), parseKeyCode(datagram.right(1)), false, CurrentTime );
+                break;
+                
+            case MOUSEY:
+                XTestFakeKeyEvent( QX11Info::display(), parseKeyCode(datagram.right(1)), false, CurrentTime );
+                break;
+                
+            case MOUSE1PRESS:
+                XTestFakeKeyEvent( QX11Info::display(), parseKeyCode(datagram.right(1)), false, CurrentTime );
+                break;
+                
+            case MOUSE1RELEASE:
+                XTestFakeKeyEvent( QX11Info::display(), parseKeyCode(datagram.right(1)), false, CurrentTime );
+                break;
+                
+            case MOUSE2PRESS:
+                XTestFakeKeyEvent( QX11Info::display(), parseKeyCode(datagram.right(1)), false, CurrentTime );
+                break;
+                
+            case MOUSE2RELEASE:
+                XTestFakeKeyEvent( QX11Info::display(), parseKeyCode(datagram.right(1)), false, CurrentTime );
+                break;
+        
+        }
+        
+        //
       
         //XTestFakeKeyEvent( QX11Info::display(), keycode, false, CurrentTime );
       
-    } while (udpSocket->hasPendingDatagrams());
+    } while (udpSocket.hasPendingDatagrams());
 }
