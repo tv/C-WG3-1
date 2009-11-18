@@ -1,5 +1,7 @@
 #include "clientwindow.h"
 
+#define INPUTSERVERPORT 45455
+
 ClientWindow::ClientWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -65,11 +67,11 @@ void ClientWindow::mouseMoveEvent( QMouseEvent *e )
 
     QByteArray data = QByteArray(1, ClientWindow::MOUSEX);
     data.append(QByteArray::number(deltaX));
-    iUdpSocket->writeDatagram( data, iServerAddress, 1111 );
+    iUdpSocket->writeDatagram( data, iServerAddress, INPUTSERVERPORT );
 
     data = QByteArray(1, ClientWindow::MOUSEY);
     data.append(QByteArray::number(deltaY));
-    iUdpSocket->writeDatagram( data, iServerAddress, 1111 );
+    iUdpSocket->writeDatagram( data, iServerAddress, INPUTSERVERPORT );
 
     //statusBar()->showMessage(data, 10000);
 
@@ -86,7 +88,7 @@ void ClientWindow::mousePressEvent( QMouseEvent *e )
         data = QByteArray(1, ClientWindow::MOUSE2PRESS);
     else
         return;
-    iUdpSocket->writeDatagram( data, iServerAddress, 1111 );
+    iUdpSocket->writeDatagram( data, iServerAddress, INPUTSERVERPORT );
 
 }
 
@@ -101,7 +103,7 @@ void ClientWindow::mouseReleaseEvent( QMouseEvent *e )
         data = QByteArray(1, ClientWindow::MOUSE2RELEASE);
     else
         return;
-    iUdpSocket->writeDatagram( data, iServerAddress, 1111 );
+    iUdpSocket->writeDatagram( data, iServerAddress, INPUTSERVERPORT );
 
 }
 
@@ -119,7 +121,7 @@ void ClientWindow::keyPressEvent( QKeyEvent *e )
             //statusBar()->showMessage(QString::number(e->key()), 5000);
             QByteArray data = QByteArray(1, ClientWindow::KEYPRESS);
             data.append(QByteArray::number(e->key()));
-            iUdpSocket->writeDatagram ( data,  iServerAddress, 11111 );
+            iUdpSocket->writeDatagram ( data,  iServerAddress, INPUTSERVERPORT );
             break;
     }
 }
@@ -138,7 +140,7 @@ void ClientWindow::keyReleaseEvent( QKeyEvent *e )
             //statusBar()->showMessage(QString::number(e->key()), 5000);
             QByteArray data = QByteArray(1, ClientWindow::KEYRELEASE);
             data.append(QByteArray::number(e->key()));
-            iUdpSocket->writeDatagram ( data,  iServerAddress, 11111 );
+            iUdpSocket->writeDatagram ( data,  iServerAddress, INPUTSERVERPORT );
             break;
     }
 }

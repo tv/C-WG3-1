@@ -6,6 +6,8 @@
 #include <QWidget>
 #include <QStatusBar>
 
+#include <cstdio>
+
 class QVBoxLayout;
 class QPushButton;
 class QTimer;
