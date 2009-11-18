@@ -35,19 +35,20 @@ using namespace std;
 
 InputListener::InputListener(QObject* parent): QObject(parent)
 {
+	udpSocket = new QUdpSocket();
+    if(udpSocket->bind(45455) == -1)
+	{
+		cout << "Socketin bindaus epäonnistui" << endl;
+		break();
+	}
+	
 	yunikorn = new QProcess(parent);
 	yunikorn->start("../yunikorn/mjpegserver.sh");
 	
 	connect(yunikorn, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(yunikornCrashed(int, QProcess::ExitStatus)));
 	
-	
 	game = new QProcess(parent);
 	
-    cout << "socketti valmis, ehkä" << endl;
-    udpSocket = new QUdpSocket();
-    if(udpSocket->bind(45455) != -1)
-        cout << "bindaus onnistui" << endl;
-
     connect(udpSocket, SIGNAL(readyRead()), this, SLOT(processPendingDatagrams()));
 }
 
