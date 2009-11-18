@@ -36,6 +36,7 @@ class InputListener: public QObject
         
     private:
         quint32 parseKeycode(QByteArray string);
+		uint InputListener::handle_qkey(QKeyEvent *event);
         QUdpSocket *udpSocket;
         
 };
