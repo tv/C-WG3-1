@@ -66,25 +66,12 @@ InputListener::~InputListener()
 
 uint InputListener::handle_qkey(QKeyEvent *event)
 {
-    int type = event->type();
     int qkey = event->key();
 
-    unsigned int xkeysym;
+    uint xkeysym;
 
-    if (qkey >= 0x20 && qkey <= 0xff) {
-        if (isascii(qkey) && isprint(qkey)) {
-            int ascii = event->nativeScanCode();
-            if (isalpha(ascii))
-                xkeysym = ascii;
-            else
-                xkeysym = qkey;
-        } else {
-            xkeysym = qkey;
-        }
-    } else if (qkey >= Qt::Key_Dead_Grave && qkey <= Qt::Key_Dead_Horn) {
-        xkeysym = qkey + 0xec00;
-    } else {
-        switch (qkey) {
+
+    switch (qkey) {
         case Qt::Key_Escape: xkeysym = XK_Escape; break;
         case Qt::Key_Tab: xkeysym = XK_Tab; break;
         case Qt::Key_Backspace: xkeysym = XK_BackSpace; break;
@@ -182,13 +169,12 @@ uint InputListener::handle_qkey(QKeyEvent *event)
         case Qt::Key_Hangul_PostHanja: xkeysym = XK_Hangul_PostHanja; break;
         case Qt::Key_Hangul_Special: xkeysym = XK_Hangul_Special; break;
         default: xkeysym = qkey; break;
-        }
     }
 
     return xkeysym;
 }
 
-quint32 InputListener::parseKeycode(QByteArray string)
+uint InputListener::parseKeycode(QByteArray string)
 {
 
     QKeyEvent eventti = QKeyEvent((QEvent::Type)6, string.toInt(), Qt::NoModifier);
@@ -198,21 +184,19 @@ quint32 InputListener::parseKeycode(QByteArray string)
 
 void InputListener::processPendingDatagrams()
 {
-    cout << "pending datagrams" << endl;
     do {
         QByteArray datagram;
         datagram.resize(udpSocket->pendingDatagramSize());
         QHostAddress sender;
         quint16 senderPort;
-        quint32 keycode;
-        
+        uint keycode;
+
         udpSocket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
 		
         if(game->state() == QProcess::NotRunning)
         {
             game->start("yukon ../darkplaces/darkplaces-linux-686-glx -basedir ../darkplaces/");
-            game->waitForStarted();
-            sleep(2);
+            sleep(1);
             XTestFakeKeyEvent( QX11Info::display(), XK_F8, true, CurrentTime );
             XTestFakeKeyEvent( QX11Info::display(), XK_F8, false, CurrentTime );
         }
@@ -221,19 +205,19 @@ void InputListener::processPendingDatagrams()
             case InputListener::KEYPRESS:
                 keycode = parseKeycode(datagram.right(datagram.size()-1));
                 cout << "tuli " << datagram.right(datagram.size()-1).toInt() << " - " << keycode << endl;
-                XTestFakeKeyEvent( QX11Info::display(), keycode, true, CurrentTime );
+                XTestFakeKeyEvent( QX11Info::display(), XKeysymToKeycode(QX11Info::display(), keycode), true, CurrentTime );
                 break;
                 
             case InputListener::KEYRELEASE:
-                XTestFakeKeyEvent( QX11Info::display(), parseKeycode(datagram.right(1)), false, CurrentTime );
+                XTestFakeKeyEvent( QX11Info::display(), XKeysymToKeycode(QX11Info::display(), parseKeycode(datagram.right(datagram.size()-1))), false, CurrentTime );
                 break;
                 
             case InputListener::MOUSEX:
-                XTestFakeRelativeMotionEvent( QX11Info::display(), datagram.right(1).toInt(), 0, CurrentTime );
+                XTestFakeRelativeMotionEvent( QX11Info::display(), datagram.right(datagram.size()-1).toInt(), 0, CurrentTime );
                 break;
                 
             case InputListener::MOUSEY:
-                XTestFakeRelativeMotionEvent( QX11Info::display(), 0, datagram.right(1).toInt(), CurrentTime );
+                XTestFakeRelativeMotionEvent( QX11Info::display(), 0, datagram.right(datagram.size()-1).toInt(), CurrentTime );
                 break;
                 
             case InputListener::MOUSE1PRESS:

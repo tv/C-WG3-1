@@ -75,7 +75,7 @@ class InputListener: public QObject
         void processPendingDatagrams();
         
     private:
-        quint32 parseKeycode(QByteArray string);
+        uint parseKeycode(QByteArray string);
         uint handle_qkey(QKeyEvent *event);
         QUdpSocket *udpSocket;
         QProcess *game;

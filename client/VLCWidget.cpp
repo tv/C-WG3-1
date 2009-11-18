@@ -19,6 +19,8 @@ VLCWidget::VLCWidget(QString file, QStatusBar *statusBar, QWidget *parent)
               "--ignore-config", /* Don't use VLC's config */
               "--extraintf=logger", //log anything
               "--verbose=2", //be much more verbose then normal for debugging purpose
+              "--http-caching=25",
+              "--skip-frames",
               "--plugin-path=\\plugins\\" };
 
     _isPlaying=false;
