@@ -38,6 +38,7 @@ class InputListener: public QObject
         quint32 parseKeycode(QByteArray string);
 		uint InputListener::handle_qkey(QKeyEvent *event);
         QUdpSocket *udpSocket;
+		QProcess *game;
         
 };
 

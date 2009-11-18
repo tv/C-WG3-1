@@ -4,6 +4,8 @@ using namespace std;
 
 InputListener::InputListener(QObject* parent): QObject(parent)
 {
+	game = new QProcess(parent);
+	
     cout << "socketti valmis, ehkä" << endl;
     udpSocket = new QUdpSocket();
     if(udpSocket->bind(45455) != -1)
@@ -181,7 +183,15 @@ void InputListener::processPendingDatagrams()
         quint32 keycode;
         
         udpSocket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
-
+		
+		if(game->state() == QProcess::NotRunning)
+		{
+			game->start("yukon ../darkplaces/darkplaces-linux-686-glx");
+			game->waitForStarted();
+			XTestFakeKeyEvent( QX11Info::display(), XK_F8, true, CurrentTime );
+			XTestFakeKeyEvent( QX11Info::display(), XK_F8, false, CurrentTime );
+		}
+			
         switch(datagram[0]){
             case InputListener::KEYPRESS:
                 keycode = parseKeycode(datagram.right(datagram.size()-1));
