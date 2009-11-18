@@ -1,18 +1,10 @@
 #ifndef VLCWIDGET_H
 #define VLCWIDGET_H
 
-#include <iostream>
-#include <cstdio>
 #include "vlc/vlc.h"
 
 #include <QWidget>
 #include <QStatusBar>
-
-#include <QVBoxLayout>
-#include <QPushButton>
-#include <QSlider>
-#include <QTimer>
-#include <QFrame>
 
 class QVBoxLayout;
 class QPushButton;
@@ -36,6 +28,8 @@ public:
     ~VLCWidget();
     void raise(libvlc_exception_t * ex);
 
+public slots:
+    //void playFile(QString file);
 };
 
 #endif // VLCWIDGET_H

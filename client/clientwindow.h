@@ -21,8 +21,6 @@
 #define MENU_WIDTH 200
 #define MENU_HEIGHT 400
 
-
-
 class ClientWindow : public QMainWindow
 {
     Q_OBJECT
