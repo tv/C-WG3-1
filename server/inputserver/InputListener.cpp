@@ -196,9 +196,9 @@ void InputListener::processPendingDatagrams()
         if(game->state() == QProcess::NotRunning)
         {
             game->start("yukon ../darkplaces/darkplaces-linux-686-glx -basedir ../darkplaces/");
-            sleep(1);
-            XTestFakeKeyEvent( QX11Info::display(), XK_F8, true, CurrentTime );
-            XTestFakeKeyEvent( QX11Info::display(), XK_F8, false, CurrentTime );
+            sleep(2);
+            XTestFakeKeyEvent( QX11Info::display(), XKeysymToKeycode(QX11Info::display(), XK_F8), true, CurrentTime );
+            XTestFakeKeyEvent( QX11Info::display(), XKeysymToKeycode(QX11Info::display(), XK_F8), false, CurrentTime );
         }
 			
         switch(datagram[0]){
