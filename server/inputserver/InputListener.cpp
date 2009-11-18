@@ -54,6 +54,8 @@ InputListener::InputListener(QObject* parent): QObject(parent)
 InputListener::~InputListener()
 {
     udpSocket->close();
+	game->kill();
+	yunikorn->kill();
 }
 
 void yunikornCrashed(int exitCode, QProcess::ExitStatus exitStatus)
@@ -246,34 +248,30 @@ void InputListener::processPendingDatagrams()
                 break;
                 
             case InputListener::MOUSEX:
-                //XTestFakeKeyEvent( QX11Info::display(), parseKeycode(datagram.right(1)), false, CurrentTime );
+				XTestFakeRelativeMotionEvent( QX11Info::display(), -1, (datagram.right(1).toInt(),0) CurrentTime );
                 break;
                 
             case InputListener::MOUSEY:
-                //XTestFakeKeyEvent( QX11Info::display(), parseKeyCode(datagram.right(1)), false, CurrentTime );
+                XTestFakeRelativeMotionEvent( QX11Info::display(), -1, (0, datagram.right(1).toInt()) CurrentTime );
                 break;
                 
             case InputListener::MOUSE1PRESS:
-                //XTestFakeKeyEvent( QX11Info::display(), parseKeyCode(datagram.right(1)), false, CurrentTime );
+                XTestFakeButtonEvent( QX11Info::display(), 1, true, CurrentTime );
                 break;
                 
             case InputListener::MOUSE1RELEASE:
-                //XTestFakeKeyEvent( QX11Info::display(), parseKeyCode(datagram.right(1)), false, CurrentTime );
+                XTestFakeButtonEvent( QX11Info::display(), 1, false, CurrentTime );
                 break;
                 
             case InputListener::MOUSE2PRESS:
-                //XTestFakeKeyEvent( QX11Info::display(), parseKeyCode(datagram.right(1)), false, CurrentTime );
+                XTestFakeButtonEvent( QX11Info::display(), 2, true, CurrentTime );
                 break;
                 
             case InputListener::MOUSE2RELEASE:
-                //XTestFakeKeyEvent( QX11Info::display(), parseKeyCode(datagram.right(1)), false, CurrentTime );
+                XTestFakeButtonEvent( QX11Info::display(), 2, false, CurrentTime );
                 break;
         
         }
-        
-        //
-      
-        //XTestFakeKeyEvent( QX11Info::display(), keycode, false, CurrentTime );
       
     } while (udpSocket->hasPendingDatagrams());
 }
