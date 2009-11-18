@@ -18,12 +18,20 @@ ClientWindow::~ClientWindow()
 
 void ClientWindow::enterGameState( QString address )
 {
+
     iState = ClientWindow::GAMESTATE;
     statusBar()->showMessage("Entering game state...", 500);
     //VLCWidget* vlc = new VLCWidget(address, statusBar(), this);
-    iServerAddress.setAddress("127.0.0.1");
+    //iServerAddress.setAddress("127.0.0.1");
     //statusBar()->showMessage(iServerAddress.toString(), 2000);
-    VLCWidget* vlc = new VLCWidget("/home/tv/Desktop/Californication.S03E08.720p.HDTV.X264-DIMENSION.mkv", statusBar(), this);
+    iServerAddress.setAddress(address);
+    iUdpSocket->writeDatagram( "start server", iServerAddress, INPUTSERVERPORT );
+    //VLCWidget* vlc = new VLCWidget("/home/tv/Desktop/Californication.S03E08.720p.HDTV.X264-DIMENSION.mkv", statusBar(), this);
+    QString path = QString("http://");
+    path.append(iServerAddress.toString());
+    path.append(":3022/localhost/stream");
+    sleep(4);
+    VLCWidget* vlc = new VLCWidget(path, statusBar(), this);
     setCentralWidget(vlc);
     //showFullScreen();
     grabKeyboard();

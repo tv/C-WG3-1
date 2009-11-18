@@ -35,19 +35,19 @@ using namespace std;
 
 InputListener::InputListener(QObject* parent): QObject(parent)
 {
-	udpSocket = new QUdpSocket();
+    udpSocket = new QUdpSocket();
     if(udpSocket->bind(45455) == -1)
-	{
-		cout << "Socketin bindaus epäonnistui" << endl;
-		break();
-	}
+    {
+        cout << "Socketin bindaus epäonnistui" << endl;
+        exit(1);
+    }
+
+//    yunikorn = new QProcess(parent);
+  //  yunikorn->start("../yunikorn/mjpegserver.sh");
 	
-	yunikorn = new QProcess(parent);
-	yunikorn->start("../yunikorn/mjpegserver.sh");
+//    connect(yunikorn, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(yunikornCrashed(int, QProcess::ExitStatus)));
 	
-	connect(yunikorn, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(yunikornCrashed(int, QProcess::ExitStatus)));
-	
-	game = new QProcess(parent);
+    game = new QProcess(parent);
 	
     connect(udpSocket, SIGNAL(readyRead()), this, SLOT(processPendingDatagrams()));
 }
@@ -55,48 +55,29 @@ InputListener::InputListener(QObject* parent): QObject(parent)
 InputListener::~InputListener()
 {
     udpSocket->close();
-	game->kill();
-	yunikorn->kill();
+    game->kill();
+    yunikorn->kill();
 }
 
-void yunikornCrashed(int exitCode, QProcess::ExitStatus exitStatus)
-{
-	yunikorn->start("../yunikorn/mjpegserver.sh");
-}
+//void yunikornCrashed(int exitCode, QProcess::ExitStatus exitStatus)
+//{
+//    yunikorn->start("../yunikorn/mjpegserver.sh");
+//}
 
 uint InputListener::handle_qkey(QKeyEvent *event)
 {
     int type = event->type();
     int qkey = event->key();
-    int qstate = event->state();
 
-    unsigned int xkeysym, xstate;
-    bool press = (type == QEvent::KeyPress) ? true : false;
-    
-    xstate = 0;
-    if (qstate & Qt::ShiftButton)
-        xstate |= ShiftMask;
-    if (qstate & Qt::ControlButton)
-        xstate |= ControlMask;
-    if (qstate & Qt::AltButton)
-        xstate |= Mod1Mask; // XXX
-    if (qstate & Qt::MetaButton)
-        xstate |= Mod1Mask; // XXX
+    unsigned int xkeysym;
 
     if (qkey >= 0x20 && qkey <= 0xff) {
         if (isascii(qkey) && isprint(qkey)) {
-            int ascii = event->ascii();
+            int ascii = event->nativeScanCode();
             if (isalpha(ascii))
                 xkeysym = ascii;
             else
-                if ((qstate & Qt::ControlButton) &&
-                    (ascii >= 0x01 && ascii <= 0x1a))
-                    if (qstate & Qt::ShiftButton)
-                        xkeysym = ascii + 0x40;
-                    else
-                        xkeysym = ascii + 0x60;
-                else
-                    xkeysym = qkey;
+                xkeysym = qkey;
         } else {
             xkeysym = qkey;
         }
@@ -106,7 +87,7 @@ uint InputListener::handle_qkey(QKeyEvent *event)
         switch (qkey) {
         case Qt::Key_Escape: xkeysym = XK_Escape; break;
         case Qt::Key_Tab: xkeysym = XK_Tab; break;
-        case Qt::Key_BackSpace: xkeysym = XK_BackSpace; break;
+        case Qt::Key_Backspace: xkeysym = XK_BackSpace; break;
         case Qt::Key_Return: xkeysym = XK_Return; break;
         case Qt::Key_Insert: xkeysym = XK_Insert; break;
         case Qt::Key_Delete: xkeysym = XK_Delete; break;
@@ -120,8 +101,6 @@ uint InputListener::handle_qkey(QKeyEvent *event)
         case Qt::Key_Up: xkeysym = XK_Up; break;
         case Qt::Key_Right: xkeysym = XK_Right; break;
         case Qt::Key_Down: xkeysym = XK_Down; break;
-        case Qt::Key_Prior: xkeysym = XK_Prior; break;
-        case Qt::Key_Next: xkeysym = XK_Next; break;
         case Qt::Key_Shift: xkeysym = XK_Shift_L; break;
         case Qt::Key_Control: xkeysym = XK_Control_L; break;
         case Qt::Key_Meta: xkeysym = XK_Meta_L; break;
@@ -206,7 +185,7 @@ uint InputListener::handle_qkey(QKeyEvent *event)
         }
     }
 
-	return xkeysym;
+    return xkeysym;
 }
 
 quint32 InputListener::parseKeycode(QByteArray string)
@@ -214,7 +193,7 @@ quint32 InputListener::parseKeycode(QByteArray string)
 
     QKeyEvent eventti = QKeyEvent((QEvent::Type)6, string.toInt(), Qt::NoModifier);
 
-    return handle_qkey(eventti);
+    return handle_qkey(&eventti);
 }
 
 void InputListener::processPendingDatagrams()
@@ -229,13 +208,14 @@ void InputListener::processPendingDatagrams()
         
         udpSocket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
 		
-		if(game->state() == QProcess::NotRunning)
-		{
-			game->start("yukon ../darkplaces/darkplaces-linux-686-glx");
-			game->waitForStarted();
-			XTestFakeKeyEvent( QX11Info::display(), XK_F8, true, CurrentTime );
-			XTestFakeKeyEvent( QX11Info::display(), XK_F8, false, CurrentTime );
-		}
+        if(game->state() == QProcess::NotRunning)
+        {
+            game->start("yukon ../darkplaces/darkplaces-linux-686-glx -basedir ../darkplaces/");
+            game->waitForStarted();
+            sleep(2);
+            XTestFakeKeyEvent( QX11Info::display(), XK_F8, true, CurrentTime );
+            XTestFakeKeyEvent( QX11Info::display(), XK_F8, false, CurrentTime );
+        }
 			
         switch(datagram[0]){
             case InputListener::KEYPRESS:
@@ -249,11 +229,11 @@ void InputListener::processPendingDatagrams()
                 break;
                 
             case InputListener::MOUSEX:
-				XTestFakeRelativeMotionEvent( QX11Info::display(), -1, (datagram.right(1).toInt(),0) CurrentTime );
+                XTestFakeRelativeMotionEvent( QX11Info::display(), datagram.right(1).toInt(), 0, CurrentTime );
                 break;
                 
             case InputListener::MOUSEY:
-                XTestFakeRelativeMotionEvent( QX11Info::display(), -1, (0, datagram.right(1).toInt()) CurrentTime );
+                XTestFakeRelativeMotionEvent( QX11Info::display(), 0, datagram.right(1).toInt(), CurrentTime );
                 break;
                 
             case InputListener::MOUSE1PRESS:

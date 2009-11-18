@@ -41,10 +41,15 @@
 #include <QEvent>
 #include <QHostAddress>
 #include <QByteArray>
-#include <X11/Xlib.h>
-#include <X11/extensions/XTest.h>
 #include <QX11Info>
+#include <QProcess>
 #include <iostream>
+
+extern "C" {
+    #include <X11/Xlib.h>
+    #include <X11/keysym.h>
+    #include <X11/extensions/XTest.h>
+}
 
 class InputListener: public QObject
 {
@@ -58,20 +63,23 @@ class InputListener: public QObject
     static const char MOUSE1RELEASE =  0x05;
     static const char MOUSE2PRESS =    0x06;
     static const char MOUSE2RELEASE =  0x07;
+
     public:
         InputListener(QObject * parent = 0);
         ~InputListener();
-        
+
+     public slots:
+        //void yunikornCrashed(int exitCode, QProcess::ExitStatus exitStatus);
+
     private slots:
         void processPendingDatagrams();
-		void yunikornCrashed(int exitCode, QProcess::ExitStatus exitStatus);
         
     private:
         quint32 parseKeycode(QByteArray string);
-		uint InputListener::handle_qkey(QKeyEvent *event);
+        uint handle_qkey(QKeyEvent *event);
         QUdpSocket *udpSocket;
-		QProcess *game;
-		QProcess *yunikorn;
+        QProcess *game;
+        QProcess *yunikorn;
 };
 
 #endif // INPUTLISTENER_H

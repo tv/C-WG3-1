@@ -40,7 +40,7 @@ MenuWidget::~MenuWidget()
 void MenuWidget::askAddress()
 {
     bool ok;
-    QString address = QInputDialog::getText(this, "Address", "Address:", QLineEdit::Normal, "", &ok);
+    QString address = QInputDialog::getText(this, "Address", "Address:", QLineEdit::Normal, "192.168.0.142", &ok);
     if (ok)
         startGame(address);
 }
