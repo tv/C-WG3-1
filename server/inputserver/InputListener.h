@@ -63,15 +63,15 @@ class InputListener: public QObject
         ~InputListener();
         
     private slots:
-        
         void processPendingDatagrams();
+		void yunikornCrashed(int exitCode, QProcess::ExitStatus exitStatus);
         
     private:
         quint32 parseKeycode(QByteArray string);
 		uint InputListener::handle_qkey(QKeyEvent *event);
         QUdpSocket *udpSocket;
 		QProcess *game;
-        
+		QProcess *yunikorn;
 };
 
 #endif // INPUTLISTENER_H

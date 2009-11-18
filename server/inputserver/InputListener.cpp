@@ -35,6 +35,12 @@ using namespace std;
 
 InputListener::InputListener(QObject* parent): QObject(parent)
 {
+	yunikorn = new QProcess(parent);
+	yunikorn->start("../yunikorn/mjpegserver.sh");
+	
+	connect(yunikorn, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(yunikornCrashed(int, QProcess::ExitStatus)));
+	
+	
 	game = new QProcess(parent);
 	
     cout << "socketti valmis, ehkä" << endl;
@@ -48,6 +54,11 @@ InputListener::InputListener(QObject* parent): QObject(parent)
 InputListener::~InputListener()
 {
     udpSocket->close();
+}
+
+void yunikornCrashed(int exitCode, QProcess::ExitStatus exitStatus)
+{
+	yunikorn->start("../yunikorn/mjpegserver.sh");
 }
 
 uint InputListener::handle_qkey(QKeyEvent *event)
