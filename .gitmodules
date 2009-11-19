@@ -1,0 +1,12 @@
+[submodule "server/glc/glc"]
+	path = server/glc/glc
+	url = git://github.com/tv/glc.git
+[submodule "server/glc/glc-support"]
+	path = server/glc/glc-support
+	url = git://nullkey.ath.cx/~pyry/glc-support
+[submodule "server/glc/packetstream"]
+	path = server/glc/packetstream
+	url = git://nullkey.ath.cx/~pyry/packetstream
+[submodule "server/glc/elfhacks"]
+	path = server/glc/elfhacks
+	url = git://nullkey.ath.cx/~pyry/elfhacks
