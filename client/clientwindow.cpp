@@ -30,21 +30,24 @@ void ClientWindow::enterGameState( QString address )
     QString path = QString("http://");
     path.append(iServerAddress.toString());
     path.append(":3022/localhost/stream");
-    sleep(4);
+    //sleep(4);
     VLCWidget* vlc = new VLCWidget(path, statusBar(), this);
 
     setCentralWidget(vlc);
     //showFullScreen();
     grabKeyboard();
-    grabMouse();
+    //grabMouse();
     setMouseTracking(true);
+
+    QCursor cursor = QCursor(Qt::BlankCursor);
+    //setCursor(cursor);
 }
 
 void ClientWindow::enterMenuState()
 {
     iState = ClientWindow::MENUSTATE;
     releaseKeyboard();
-    releaseMouse();
+    //releaseMouse();
     setMouseTracking(false);
     statusBar()->showMessage("Entering menu state...", 500);
     MenuWidget* menu = new MenuWidget(this, statusBar());
@@ -57,24 +60,27 @@ void ClientWindow::mouseMoveEvent( QMouseEvent *e )
     if ( iState == ClientWindow::MENUSTATE )
         return;
 
+    QPoint pos = e->pos();
+    QPoint c = QPoint(width(), height());
+    c /= 2;
+    QCursor::setPos(mapToGlobal(c));
+    QPoint delta = pos - c;
+
     statusBar()->showMessage("Mouse moving...", 100);
-    int x = e->globalX();
-    int y = e->globalY();
-    int deltaX = x-iMouseX;
-    int deltaY = y-iMouseY;
-    iMouseX = x;
-    iMouseY = y;
+    //int x = e->globalX();
+    //int y = e->globalY();
+    //int deltaX = x-iMouseX;
+    //int deltaY = y-iMouseY;
+    //iMouseX = x;
+    //iMouseY = y;
 
     QByteArray data = QByteArray(1, ClientWindow::MOUSEX);
-    data.append(QByteArray::number(deltaX));
+    data.append(QByteArray::number(delta.x()));
     iUdpSocket->writeDatagram( data, iServerAddress, INPUTSERVERPORT );
 
     data = QByteArray(1, ClientWindow::MOUSEY);
-    data.append(QByteArray::number(deltaY));
+    data.append(QByteArray::number(delta.y()));
     iUdpSocket->writeDatagram( data, iServerAddress, INPUTSERVERPORT );
-
-    //statusBar()->showMessage(data, 10000);
-
 }
 
 void ClientWindow::mousePressEvent( QMouseEvent *e )
