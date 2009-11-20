@@ -15,6 +15,8 @@
 #include <QUdpSocket>
 #include <QHostAddress>
 #include <QByteArray>
+#include <QCursor>
+#include <QPoint>
 #include "VLCWidget.h"
 #include "menuwidget.h"
 
@@ -42,8 +44,8 @@ private:
     int iState;
     QUdpSocket * iUdpSocket;
     QHostAddress iServerAddress;
-    int iMouseX;
-    int iMouseY;
+    //int iMouseX;
+    //int iMouseY;
 
 protected:
     void keyPressEvent( QKeyEvent *e );

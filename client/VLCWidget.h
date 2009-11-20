@@ -4,6 +4,7 @@
 #include "vlc/vlc.h"
 
 #include <QWidget>
+#include <QMouseEvent>
 #include <QStatusBar>
 
 #include <cstdio>

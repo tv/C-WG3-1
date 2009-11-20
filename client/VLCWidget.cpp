@@ -13,6 +13,8 @@
 VLCWidget::VLCWidget(QString file, QStatusBar *statusBar, QWidget *parent)
 : QWidget(parent)
 {
+    setMouseTracking(true);
+
     //preparation of the vlc command
     const char * const vlc_args[] = {
               "-I", "dummy", /* Don't use any interface */
