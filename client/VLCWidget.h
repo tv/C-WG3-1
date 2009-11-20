@@ -1,18 +1,13 @@
 #ifndef VLCWIDGET_H
 #define VLCWIDGET_H
 
-#include <iostream>
-#include <cstdio>
 #include "vlc/vlc.h"
 
 #include <QWidget>
+#include <QMouseEvent>
 #include <QStatusBar>
 
-#include <QVBoxLayout>
-#include <QPushButton>
-#include <QSlider>
-#include <QTimer>
-#include <QFrame>
+#include <cstdio>
 
 class QVBoxLayout;
 class QPushButton;

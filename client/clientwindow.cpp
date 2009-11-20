@@ -1,5 +1,7 @@
 #include "clientwindow.h"
 
+#define INPUTSERVERPORT 45455
+
 ClientWindow::ClientWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -16,24 +18,36 @@ ClientWindow::~ClientWindow()
 
 void ClientWindow::enterGameState( QString address )
 {
+
     iState = ClientWindow::GAMESTATE;
     statusBar()->showMessage("Entering game state...", 500);
-    //VLCWidget* vlc = new VLCWidget(address, statusBar(), this);
-    iServerAddress.setAddress("10.117.0.49");
+
     //statusBar()->showMessage(iServerAddress.toString(), 2000);
-    VLCWidget* vlc = new VLCWidget("E:\\Documents\\Kurssit\\MMJ\\Qt_client\\Client\\debug\\test.avi", statusBar(), this);
+    iServerAddress.setAddress(address);
+    iUdpSocket->writeDatagram( "start server", iServerAddress, INPUTSERVERPORT );
+    //VLCWidget* vlc = new VLCWidget("/home/tv/Desktop/Californication.S03E08.720p.HDTV.X264-DIMENSION.mkv", statusBar(), this);
+    //VLCWidget* vlc = new VLCWidget("E:\\Documents\\Kurssit\\MMJ\\Qt_client\\Client\\debug\\test.avi", statusBar(), this);
+    QString path = QString("http://");
+    path.append(iServerAddress.toString());
+    path.append(":3022/localhost/stream");
+    //sleep(4);
+    VLCWidget* vlc = new VLCWidget(path, statusBar(), this);
+
     setCentralWidget(vlc);
     //showFullScreen();
     grabKeyboard();
-    grabMouse();
+    //grabMouse();
     setMouseTracking(true);
+
+    QCursor cursor = QCursor(Qt::BlankCursor);
+    //setCursor(cursor);
 }
 
 void ClientWindow::enterMenuState()
 {
     iState = ClientWindow::MENUSTATE;
     releaseKeyboard();
-    releaseMouse();
+    //releaseMouse();
     setMouseTracking(false);
     statusBar()->showMessage("Entering menu state...", 500);
     MenuWidget* menu = new MenuWidget(this, statusBar());
@@ -43,28 +57,36 @@ void ClientWindow::enterMenuState()
 
 void ClientWindow::mouseMoveEvent( QMouseEvent *e )
 {
-    //statusBar()->showMessage("Mouse...", 100);
-    int x = e->globalX();
-    int y = e->globalY();
-    int deltaX = x-iMouseX;
-    int deltaY = y-iMouseY;
-    iMouseX = x;
-    iMouseY = y;
+    if ( iState == ClientWindow::MENUSTATE )
+        return;
+
+    QPoint pos = e->pos();
+    QPoint c = QPoint(width(), height());
+    c /= 2;
+    QCursor::setPos(mapToGlobal(c));
+    QPoint delta = pos - c;
+
+    statusBar()->showMessage("Mouse moving...", 100);
+    //int x = e->globalX();
+    //int y = e->globalY();
+    //int deltaX = x-iMouseX;
+    //int deltaY = y-iMouseY;
+    //iMouseX = x;
+    //iMouseY = y;
 
     QByteArray data = QByteArray(1, ClientWindow::MOUSEX);
-    data.append(QByteArray::number(deltaX));
-    iUdpSocket->writeDatagram( data, iServerAddress, 1111 );
+    data.append(QByteArray::number(delta.x()));
+    iUdpSocket->writeDatagram( data, iServerAddress, INPUTSERVERPORT );
 
     data = QByteArray(1, ClientWindow::MOUSEY);
-    data.append(QByteArray::number(deltaY));
-    iUdpSocket->writeDatagram( data, iServerAddress, 1111 );
-
-    //statusBar()->showMessage(data, 10000);
-
+    data.append(QByteArray::number(delta.y()));
+    iUdpSocket->writeDatagram( data, iServerAddress, INPUTSERVERPORT );
 }
 
 void ClientWindow::mousePressEvent( QMouseEvent *e )
 {
+    if ( iState == ClientWindow::MENUSTATE )
+        return;
     QByteArray data;
     if ( e->button() == Qt::LeftButton )
         data = QByteArray(1, ClientWindow::MOUSE1PRESS);
@@ -72,12 +94,14 @@ void ClientWindow::mousePressEvent( QMouseEvent *e )
         data = QByteArray(1, ClientWindow::MOUSE2PRESS);
     else
         return;
-    iUdpSocket->writeDatagram( data, iServerAddress, 1111 );
+    iUdpSocket->writeDatagram( data, iServerAddress, INPUTSERVERPORT );
 
 }
 
 void ClientWindow::mouseReleaseEvent( QMouseEvent *e )
 {
+    if ( iState == ClientWindow::MENUSTATE )
+        return;
     QByteArray data;
     if ( e->button() == Qt::LeftButton )
         data = QByteArray(1, ClientWindow::MOUSE1RELEASE);
@@ -85,7 +109,7 @@ void ClientWindow::mouseReleaseEvent( QMouseEvent *e )
         data = QByteArray(1, ClientWindow::MOUSE2RELEASE);
     else
         return;
-    iUdpSocket->writeDatagram( data, iServerAddress, 1111 );
+    iUdpSocket->writeDatagram( data, iServerAddress, INPUTSERVERPORT );
 
 }
 
@@ -103,7 +127,7 @@ void ClientWindow::keyPressEvent( QKeyEvent *e )
             //statusBar()->showMessage(QString::number(e->key()), 5000);
             QByteArray data = QByteArray(1, ClientWindow::KEYPRESS);
             data.append(QByteArray::number(e->key()));
-            iUdpSocket->writeDatagram ( data,  iServerAddress, 11111 );
+            iUdpSocket->writeDatagram ( data,  iServerAddress, INPUTSERVERPORT );
             break;
     }
 }
@@ -122,7 +146,7 @@ void ClientWindow::keyReleaseEvent( QKeyEvent *e )
             //statusBar()->showMessage(QString::number(e->key()), 5000);
             QByteArray data = QByteArray(1, ClientWindow::KEYRELEASE);
             data.append(QByteArray::number(e->key()));
-            iUdpSocket->writeDatagram ( data,  iServerAddress, 11111 );
+            iUdpSocket->writeDatagram ( data,  iServerAddress, INPUTSERVERPORT );
             break;
     }
 }
