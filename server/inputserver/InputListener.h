@@ -79,7 +79,7 @@ class InputListener: public QObject
         uint handle_qkey(QKeyEvent *event);
         QUdpSocket *udpSocket;
         QProcess *game;
-        QProcess *yunikorn;
+        QProcess *streaming;
 };
 
 #endif // INPUTLISTENER_H

@@ -42,8 +42,8 @@ InputListener::InputListener(QObject* parent): QObject(parent)
         exit(1);
     }
 
-//    yunikorn = new QProcess(parent);
-  //  yunikorn->start("../yunikorn/mjpegserver.sh");
+    streaming = new QProcess(parent);
+    streaming->start("glc-play stream.fifo -o - -y 1 | ffmpeg -i - -vcodec mpeg4 -f mpegts -s 720x432 -r 30 -re -b 2000k -threads 2 udp://127.0.0.1:1234");
 	
 //    connect(yunikorn, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(yunikornCrashed(int, QProcess::ExitStatus)));
 	
@@ -56,7 +56,7 @@ InputListener::~InputListener()
 {
     udpSocket->close();
     game->kill();
-    yunikorn->kill();
+    streaming->kill();
 }
 
 //void yunikornCrashed(int exitCode, QProcess::ExitStatus exitStatus)
@@ -195,7 +195,7 @@ void InputListener::processPendingDatagrams()
 		
         if(game->state() == QProcess::NotRunning)
         {
-            game->start("yukon ../darkplaces/darkplaces-linux-686-glx -basedir ../darkplaces/");
+            game->start("glc-capture  ../darkplaces/darkplaces-linux-686-glx -basedir ../darkplaces/");
             sleep(2);
             XTestFakeKeyEvent( QX11Info::display(), XKeysymToKeycode(QX11Info::display(), XK_F8), true, CurrentTime );
             XTestFakeKeyEvent( QX11Info::display(), XKeysymToKeycode(QX11Info::display(), XK_F8), false, CurrentTime );
