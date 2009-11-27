@@ -27,19 +27,24 @@ void ClientWindow::enterGameState( QString address )
     iUdpSocket->writeDatagram( "start server", iServerAddress, INPUTSERVERPORT );
     //VLCWidget* vlc = new VLCWidget("/home/tv/Desktop/Californication.S03E08.720p.HDTV.X264-DIMENSION.mkv", statusBar(), this);
     //VLCWidget* vlc = new VLCWidget("E:\\Documents\\Kurssit\\MMJ\\Qt_client\\Client\\debug\\test.avi", statusBar(), this);
-    QString path = QString("http://");
-    path.append(iServerAddress.toString());
-    path.append(":3022/localhost/stream");
+    //QString path = QString("http://");
+    //path.append(iServerAddress.toString());
+    //path.append(":3022/localhost/stream");
+    QString path = QString("stream.sdp");
     //sleep(4);
     VLCWidget* vlc = new VLCWidget(path, statusBar(), this);
 
     setCentralWidget(vlc);
     //showFullScreen();
-    grabKeyboard();
     //grabMouse();
+
+    /*
+    grabKeyboard();
     setMouseTracking(true);
 
     QCursor cursor = QCursor(Qt::BlankCursor);
+
+    */
     //setCursor(cursor);
 }
 

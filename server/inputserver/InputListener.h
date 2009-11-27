@@ -45,6 +45,8 @@
 #include <QProcess>
 #include <iostream>
 
+#include "ThreadHandler.h"
+
 extern "C" {
     #include <X11/Xlib.h>
     #include <X11/keysym.h>
@@ -73,13 +75,18 @@ class InputListener: public QObject
 
     private slots:
         void processPendingDatagrams();
-        
+
+    signals:
+        void startStreamProcess(QString path);
+        void startGameProcess(QString path);
+
     private:
         uint parseKeycode(QByteArray string);
         uint handle_qkey(QKeyEvent *event);
         QUdpSocket *udpSocket;
-        QProcess *game;
-        QProcess *streaming;
+        ThreadHandler *game;
+        QProcess *glcplay;
+        QProcess *ffmpeg;
 };
 
 #endif // INPUTLISTENER_H

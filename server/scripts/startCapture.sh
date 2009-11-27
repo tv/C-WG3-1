@@ -1,1 +1,1 @@
-glc-capture -s -v 4 -o ~/test/stream.fifo ./darkplaces-linux-686-glx
+glc-capture -s -v 4 -o ../fifos/stream ./darkplaces-linux-686-glx

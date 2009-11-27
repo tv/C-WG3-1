@@ -42,12 +42,12 @@ InputListener::InputListener(QObject* parent): QObject(parent)
         exit(1);
     }
 
-    streaming = new QProcess(parent);
-    streaming->start("glc-play stream.fifo -o - -y 1 | ffmpeg -i - -vcodec mpeg4 -f mpegts -s 720x432 -r 30 -re -b 2000k -threads 2 udp://127.0.0.1:1234");
-	
-//    connect(yunikorn, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(yunikornCrashed(int, QProcess::ExitStatus)));
-	
-    game = new QProcess(parent);
+    game = new ThreadHandler(this);
+    glcplay = new QProcess(this);
+    ffmpeg = new QProcess(this);
+
+    connect(this, SIGNAL(startGameProcess(QString)), game, SLOT(runProcess(QString)));
+
 	
     connect(udpSocket, SIGNAL(readyRead()), this, SLOT(processPendingDatagrams()));
 }
@@ -55,14 +55,10 @@ InputListener::InputListener(QObject* parent): QObject(parent)
 InputListener::~InputListener()
 {
     udpSocket->close();
-    game->kill();
-    streaming->kill();
+    game->exit();
+    ffmpeg->close();
+    glcplay->close();
 }
-
-//void yunikornCrashed(int exitCode, QProcess::ExitStatus exitStatus)
-//{
-//    yunikorn->start("../yunikorn/mjpegserver.sh");
-//}
 
 uint InputListener::handle_qkey(QKeyEvent *event)
 {
@@ -193,18 +189,30 @@ void InputListener::processPendingDatagrams()
 
         udpSocket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
 		
-        if(game->state() == QProcess::NotRunning)
+        if(ffmpeg->state() == QProcess::NotRunning && QString(datagram).contains("start"))
         {
-            game->start("glc-capture  ../darkplaces/darkplaces-linux-686-glx -basedir ../darkplaces/");
-            sleep(2);
-            XTestFakeKeyEvent( QX11Info::display(), XKeysymToKeycode(QX11Info::display(), XK_F8), true, CurrentTime );
-            XTestFakeKeyEvent( QX11Info::display(), XKeysymToKeycode(QX11Info::display(), XK_F8), false, CurrentTime );
+            if(glcplay->state() == QProcess::NotRunning || ffmpeg->state() == QProcess::NotRunning)
+            {
+                glcplay->setStandardOutputProcess(ffmpeg);
+
+                glcplay->start("glc-play ../fifos/stream -o - -y 1");
+                ffmpeg->start(QString("ffmpeg -i - -vcodec h263p -f rtp -s 1000x600 -cropright 200 rtp://").append(sender.toString()).append(":45456"));
+            }
+            cout << "game starting...";
+            emit startGameProcess("glc-capture -f 60 -s -o ../fifos/stream ../darkplaces/darkplaces-linux-686-glx -basedir ../darkplaces/");
+            cout << " ok" << endl;
+
+
+
         }
+        //if(streaming->state() == QProcess::NotRunning)
+
+
 			
         switch(datagram[0]){
             case InputListener::KEYPRESS:
                 keycode = parseKeycode(datagram.right(datagram.size()-1));
-                cout << "tuli " << datagram.right(datagram.size()-1).toInt() << " - " << keycode << endl;
+                //cout << "tuli " << datagram.right(datagram.size()-1).toInt() << " - " << keycode << endl;
                 XTestFakeKeyEvent( QX11Info::display(), XKeysymToKeycode(QX11Info::display(), keycode), true, CurrentTime );
                 break;
                 

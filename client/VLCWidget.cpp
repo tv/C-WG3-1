@@ -1,7 +1,7 @@
 #include "VLCWidget.h"
 
 /* libVLC and Qt sample code
- * Copyright © 2009 Alexander Maringer <maringer@maringer-it.de>
+ * Copyright Â© 2009 Alexander Maringer <maringer@maringer-it.de>
  */
 
 #include <QVBoxLayout>
@@ -22,6 +22,8 @@ VLCWidget::VLCWidget(QString file, QStatusBar *statusBar, QWidget *parent)
               "--extraintf=logger", //log anything
               "--verbose=2", //be much more verbose then normal for debugging purpose
               "--http-caching=25",
+              "--rtp-caching 50",
+              "--udp-caching=10",
               "--skip-frames",
               "--plugin-path=\\plugins\\" };
 
