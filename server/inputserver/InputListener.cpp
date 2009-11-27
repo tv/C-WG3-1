@@ -199,7 +199,7 @@ void InputListener::processPendingDatagrams()
                 ffmpeg->start(QString("ffmpeg -i - -vcodec h263p -f rtp -s 1000x600 -cropright 200 rtp://").append(sender.toString()).append(":45456"));
             }
             cout << "game starting...";
-            emit startGameProcess("glc-capture -f 60 -s -o ../fifos/stream ../darkplaces/darkplaces-linux-686-glx -basedir ../darkplaces/");
+            emit startGameProcess("glc-capture -f 30 -s -o ../fifos/stream ../darkplaces/darkplaces-linux-686-glx -basedir ../darkplaces/");
             cout << " ok" << endl;
 
 
