@@ -35,17 +35,18 @@ void ClientWindow::enterGameState( QString address )
     VLCWidget* vlc = new VLCWidget(path, statusBar(), this);
 
     setCentralWidget(vlc);
-    //showFullScreen();
-    //grabMouse();
+    
+showFullScreen();
+    grabMouse();
 
-    /*
+    
     grabKeyboard();
     setMouseTracking(true);
 
     QCursor cursor = QCursor(Qt::BlankCursor);
 
-    */
-    //setCursor(cursor);
+    
+    setCursor(cursor);
 }
 
 void ClientWindow::enterMenuState()
