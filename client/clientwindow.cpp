@@ -48,8 +48,8 @@ void ClientWindow::enterGameState( QString address )
 
     setCentralWidget(vlc);
     
-    //showFullScreen();
-    //grabMouse();
+    showFullScreen();
+    grabMouse();
     grabKeyboard();
     setMouseTracking(true);
 
@@ -61,7 +61,8 @@ void ClientWindow::enterMenuState()
 {
     iState = ClientWindow::MENUSTATE;
     releaseKeyboard();
-    //releaseMouse();
+    releaseMouse();
+    showNormal();
     setMouseTracking(false);
     QCursor cursor = QCursor();
     setCursor(cursor);
@@ -137,6 +138,7 @@ void ClientWindow::keyPressEvent( QKeyEvent *e )
     switch( e->key() )
     {
         case Qt::Key_F1:
+            iUdpSocket->writeDatagram( "stop server", iServerAddress, INPUTSERVERPORT );
             enterMenuState();
             break;
         default:
