@@ -22,30 +22,38 @@ void ClientWindow::enterGameState( QString address )
     iState = ClientWindow::GAMESTATE;
     statusBar()->showMessage("Entering game state...", 500);
 
-    //statusBar()->showMessage(iServerAddress.toString(), 2000);
     iServerAddress.setAddress(address);
     iUdpSocket->writeDatagram( "start server", iServerAddress, INPUTSERVERPORT );
-    //VLCWidget* vlc = new VLCWidget("/home/tv/Desktop/Californication.S03E08.720p.HDTV.X264-DIMENSION.mkv", statusBar(), this);
-    //VLCWidget* vlc = new VLCWidget("E:\\Documents\\Kurssit\\MMJ\\Qt_client\\Client\\debug\\test.avi", statusBar(), this);
-    //QString path = QString("http://");
-    //path.append(iServerAddress.toString());
-    //path.append(":3022/localhost/stream");
+
+    QString line;
+    QFile file;
+    file.setFileName("stream.sdp");
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    file.write("v=0\n");
+    line = QString("o=- 0 0 IN IP4 ") + address + QString("\n");
+    file.write(line.toAscii());
+    file.write("s=No Name\n");
+    line = QString("c=IN IP4 ") + address + QString("\n");
+    file.write(line.toAscii());
+    file.write("t=0 0\n");
+    file.write("a=tool:libavformat 52.39.2\n");
+    file.write("m=video 45456 RTP/AVP 96\n");
+    file.write("b=AS:200\n");
+    file.write("a=rtpmap:96 H263-2000/90000\n");
+    file.close();
+
     QString path = QString("stream.sdp");
     //sleep(4);
     VLCWidget* vlc = new VLCWidget(path, statusBar(), this);
 
     setCentralWidget(vlc);
     
-showFullScreen();
-    grabMouse();
-
-    
+    //showFullScreen();
+    //grabMouse();
     grabKeyboard();
     setMouseTracking(true);
 
     QCursor cursor = QCursor(Qt::BlankCursor);
-
-    
     setCursor(cursor);
 }
 
@@ -55,6 +63,8 @@ void ClientWindow::enterMenuState()
     releaseKeyboard();
     //releaseMouse();
     setMouseTracking(false);
+    QCursor cursor = QCursor();
+    setCursor(cursor);
     statusBar()->showMessage("Entering menu state...", 500);
     MenuWidget* menu = new MenuWidget(this, statusBar());
     menu->setFocus();
