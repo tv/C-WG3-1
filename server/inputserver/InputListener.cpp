@@ -188,8 +188,12 @@ void InputListener::processPendingDatagrams()
         uint keycode;
 
         udpSocket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
-		
-        if(QString(datagram).contains("start"))
+
+        if(QString(datagram).contains("stop"))
+        {
+            ffmpeg->close();
+        }
+        else if(QString(datagram).contains("start"))
         {
             if(ffmpeg->state() == QProcess::NotRunning)
             {
