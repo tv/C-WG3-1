@@ -1,5 +1,7 @@
 #include "clientwindow.h"
 
+#define INPUT_SENDING 1
+#undef INPUT_SENDING
 #define INPUTSERVERPORT 45455
 
 ClientWindow::ClientWindow(QWidget *parent)
@@ -38,8 +40,8 @@ void ClientWindow::enterGameState( QString address )
     file.write("t=0 0\n");
     file.write("a=tool:libavformat 52.39.2\n");
     file.write("m=video 45456 RTP/AVP 96\n");
-    file.write("b=AS:200\n");
-    file.write("a=rtpmap:96 H263-2000/90000\n");
+    file.write("b=AS:1200\n");
+    file.write("a=rtpmap:96 MP4V-ES/90000\n");
     file.close();
 
     QString path = QString("stream.sdp");
@@ -48,6 +50,7 @@ void ClientWindow::enterGameState( QString address )
 
     setCentralWidget(vlc);
     
+#ifdef INPUT_SENDING
     showFullScreen();
     grabMouse();
     grabKeyboard();
@@ -55,6 +58,7 @@ void ClientWindow::enterGameState( QString address )
 
     QCursor cursor = QCursor(Qt::BlankCursor);
     setCursor(cursor);
+#endif
 }
 
 void ClientWindow::enterMenuState()

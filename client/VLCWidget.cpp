@@ -75,7 +75,7 @@ VLCWidget::VLCWidget(QString file, QStatusBar *statusBar, QWidget *parent)
     QCursor cursor = QCursor(Qt::BlankCursor);
     setCursor(cursor);
 
-    this->resize(800,600);
+    this->resize(960,600);
     this->show();
 }
 
