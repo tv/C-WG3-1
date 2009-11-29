@@ -189,61 +189,59 @@ void InputListener::processPendingDatagrams()
 
         udpSocket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
 		
-        if(ffmpeg->state() == QProcess::NotRunning && QString(datagram).contains("start"))
+        if(QString(datagram).contains("start"))
         {
-            if(glcplay->state() == QProcess::NotRunning || ffmpeg->state() == QProcess::NotRunning)
+            if(ffmpeg->state() == QProcess::NotRunning)
             {
                 glcplay->setStandardOutputProcess(ffmpeg);
 
                 glcplay->start("glc-play ../fifos/stream -o - -y 1");
-                ffmpeg->start(QString("ffmpeg -i - -vcodec h263p -f rtp -s 1000x600 -cropright 200 rtp://").append(sender.toString()).append(":45456"));
+                QString ffmpeg_run = QString("ffmpeg -i - -vcodec h263p -f rtp -s 1000x600 -cropright 200 rtp://").append(sender.toString()).append(":45456");
+                cout << ffmpeg_run.data() << endl;
+                ffmpeg->start(ffmpeg_run);
             }
-            cout << "game starting...";
-            emit startGameProcess("glc-capture -f 30 -s -o ../fifos/stream ../darkplaces/darkplaces-linux-686-glx -basedir ../darkplaces/");
-            cout << " ok" << endl;
 
-
-
+            if(game->state() == QProcess::NotRunning  && QString(datagram).contains("start"))
+                emit startGameProcess("glc-capture -f 30 -s -o ../fifos/stream ../darkplaces/darkplaces-linux-686-glx -basedir ../darkplaces/");
         }
-        //if(streaming->state() == QProcess::NotRunning)
+        else
+        {
+            switch(datagram[0]){
+                case InputListener::KEYPRESS:
+                    keycode = parseKeycode(datagram.right(datagram.size()-1));
+                    //cout << "tuli " << datagram.right(datagram.size()-1).toInt() << " - " << keycode << endl;
+                    XTestFakeKeyEvent( QX11Info::display(), XKeysymToKeycode(QX11Info::display(), keycode), true, CurrentTime );
+                    break;
 
+                case InputListener::KEYRELEASE:
+                    XTestFakeKeyEvent( QX11Info::display(), XKeysymToKeycode(QX11Info::display(), parseKeycode(datagram.right(datagram.size()-1))), false, CurrentTime );
+                    break;
 
-			
-        switch(datagram[0]){
-            case InputListener::KEYPRESS:
-                keycode = parseKeycode(datagram.right(datagram.size()-1));
-                //cout << "tuli " << datagram.right(datagram.size()-1).toInt() << " - " << keycode << endl;
-                XTestFakeKeyEvent( QX11Info::display(), XKeysymToKeycode(QX11Info::display(), keycode), true, CurrentTime );
-                break;
-                
-            case InputListener::KEYRELEASE:
-                XTestFakeKeyEvent( QX11Info::display(), XKeysymToKeycode(QX11Info::display(), parseKeycode(datagram.right(datagram.size()-1))), false, CurrentTime );
-                break;
-                
-            case InputListener::MOUSEX:
-                XTestFakeRelativeMotionEvent( QX11Info::display(), datagram.right(datagram.size()-1).toInt(), 0, CurrentTime );
-                break;
-                
-            case InputListener::MOUSEY:
-                XTestFakeRelativeMotionEvent( QX11Info::display(), 0, datagram.right(datagram.size()-1).toInt(), CurrentTime );
-                break;
-                
-            case InputListener::MOUSE1PRESS:
-                XTestFakeButtonEvent( QX11Info::display(), 1, true, CurrentTime );
-                break;
-                
-            case InputListener::MOUSE1RELEASE:
-                XTestFakeButtonEvent( QX11Info::display(), 1, false, CurrentTime );
-                break;
-                
-            case InputListener::MOUSE2PRESS:
-                XTestFakeButtonEvent( QX11Info::display(), 2, true, CurrentTime );
-                break;
-                
-            case InputListener::MOUSE2RELEASE:
-                XTestFakeButtonEvent( QX11Info::display(), 2, false, CurrentTime );
-                break;
-        
+                case InputListener::MOUSEX:
+                    XTestFakeRelativeMotionEvent( QX11Info::display(), datagram.right(datagram.size()-1).toInt(), 0, CurrentTime );
+                    break;
+
+                case InputListener::MOUSEY:
+                    XTestFakeRelativeMotionEvent( QX11Info::display(), 0, datagram.right(datagram.size()-1).toInt(), CurrentTime );
+                    break;
+
+                case InputListener::MOUSE1PRESS:
+                    XTestFakeButtonEvent( QX11Info::display(), 1, true, CurrentTime );
+                    break;
+
+                case InputListener::MOUSE1RELEASE:
+                    XTestFakeButtonEvent( QX11Info::display(), 1, false, CurrentTime );
+                    break;
+
+                case InputListener::MOUSE2PRESS:
+                    XTestFakeButtonEvent( QX11Info::display(), 2, true, CurrentTime );
+                    break;
+
+                case InputListener::MOUSE2RELEASE:
+                    XTestFakeButtonEvent( QX11Info::display(), 2, false, CurrentTime );
+                    break;
+
+            }
         }
       
     } while (udpSocket->hasPendingDatagrams());

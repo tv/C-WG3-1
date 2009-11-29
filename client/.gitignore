@@ -3,3 +3,4 @@ Makefile
 *.o
 moc_*
 vlc-log.txt
+stream.sdp

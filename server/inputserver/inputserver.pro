@@ -10,6 +10,8 @@ CONFIG += qt \
 unix:LIBS += -lXtst
 QT += network
 
+CONFIG += debug
+
 # Input
 HEADERS += InputListener.h \
     ThreadHandler.h
