@@ -17,6 +17,7 @@
 #include <QByteArray>
 #include <QCursor>
 #include <QPoint>
+#include <QFile>
 #include "VLCWidget.h"
 #include "menuwidget.h"
 

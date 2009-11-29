@@ -4,7 +4,7 @@
 #include <QThread>
 #include <QProcess>
 #include <iostream>
-#include <QDebug>
+
 class ThreadHandler : public QThread
 {
     Q_OBJECT
