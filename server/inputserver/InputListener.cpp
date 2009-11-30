@@ -207,7 +207,7 @@ void InputListener::processPendingDatagrams()
 
                 glcplay->start("glc-play ../fifos/stream -o - -y 1");
                 //QString ffmpeg_run = QString("ffmpeg -i - -vcodec h263p -r 20 -b 900000 -f rtp -s 700x400 -cropright 60 rtp://").append(sender.toString()).append(":45456");
-                QString ffmpeg_run = QString("ffmpeg -i - -vcodec mpeg4 -r 25 -qscale 7 -mbd rd -flags +4mv+aic -trellis 2 -cmp 2 -subcmp 2 -g 300 -f rtp -s 700x400 -cropright 60 rtp://").append(sender.toString()).append(":45456");
+                QString ffmpeg_run = QString("ffmpeg -i - -vcodec mpeg4 -r 25 -qscale 15 -mbd rd -flags +4mv+aic -trellis 2 -cmp 2 -subcmp 2 -g 300 -f rtp -s 700x400 -cropright 60 rtp://").append(sender.toString()).append(":45456");
                 cout << ffmpeg_run.data() << endl;
 
                 connect(ffmpeg, SIGNAL(readyReadStandardOutput()), this, SLOT(readffmpegOut()));
@@ -217,7 +217,7 @@ void InputListener::processPendingDatagrams()
             }
 
             if(game->state() == QProcess::NotRunning  && QString(datagram).contains("start"))
-                emit startGameProcess("glc-capture -f 30 -s -o ../fifos/stream ../darkplaces/darkplaces-linux-686-glx -basedir ../darkplaces/");
+                emit startGameProcess("glc-capture -f 30 -s -o ../fifos/stream ../darkplaces/darkplaces-linux-686-sdl -basedir ../darkplaces/");
         }
         else
         {
