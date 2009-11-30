@@ -39,7 +39,7 @@ void ClientWindow::enterGameState( QString address )
     file.write("a=tool:libavformat 52.39.2\n");
     file.write("m=video 45456 RTP/AVP 96\n");
     file.write("b=AS:200\n");
-    file.write("a=rtpmap:96 H263-2000/90000\n");
+    file.write("a=rtpmap:96 MP4V-ES/90000\n");
     file.close();
 
     QString path = QString("stream.sdp");
