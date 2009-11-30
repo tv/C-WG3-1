@@ -72,7 +72,10 @@ VLCWidget::VLCWidget(QString file, QStatusBar *statusBar, QWidget *parent)
     //_mp = libvlc_media_player_new (_vlcinstance, &_vlcexcep);
     //raise (&_vlcexcep);
 
-    this->resize(800,600);
+    QCursor cursor = QCursor(Qt::BlankCursor);
+    setCursor(cursor);
+
+    this->resize(960,600);
     this->show();
 }
 

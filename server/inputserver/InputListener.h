@@ -75,6 +75,7 @@ class InputListener: public QObject
 
     private slots:
         void processPendingDatagrams();
+        void readffmpegOut();
 
     signals:
         void startStreamProcess(QString path);
