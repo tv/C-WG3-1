@@ -178,6 +178,12 @@ uint InputListener::parseKeycode(QByteArray string)
     return handle_qkey(&eventti);
 }
 
+void InputListener::readffmpegOut()
+{
+    std::cout << ffmpeg->readAllStandardError().data() << std::endl;
+    std::cout << ffmpeg->readAllStandardOutput().data() << std::endl;
+}
+
 void InputListener::processPendingDatagrams()
 {
     do {
@@ -200,8 +206,13 @@ void InputListener::processPendingDatagrams()
                 glcplay->setStandardOutputProcess(ffmpeg);
 
                 glcplay->start("glc-play ../fifos/stream -o - -y 1");
-                QString ffmpeg_run = QString("ffmpeg -i - -vcodec h263p -f rtp -s 1000x600 -cropright 200 rtp://").append(sender.toString()).append(":45456");
+                //QString ffmpeg_run = QString("ffmpeg -i - -vcodec h263p -r 20 -b 900000 -f rtp -s 700x400 -cropright 60 rtp://").append(sender.toString()).append(":45456");
+                QString ffmpeg_run = QString("ffmpeg -i - -vcodec mpeg4 -r 25 -qscale 7 -mbd rd -flags +4mv+aic -trellis 2 -cmp 2 -subcmp 2 -g 300 -f rtp -s 700x400 -cropright 60 rtp://").append(sender.toString()).append(":45456");
                 cout << ffmpeg_run.data() << endl;
+
+                connect(ffmpeg, SIGNAL(readyReadStandardOutput()), this, SLOT(readffmpegOut()));
+                connect(ffmpeg, SIGNAL(readyReadStandardError()), this, SLOT(readffmpegOut()));
+
                 ffmpeg->start(ffmpeg_run);
             }
 
