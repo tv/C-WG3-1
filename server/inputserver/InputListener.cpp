@@ -217,7 +217,7 @@ void InputListener::processPendingDatagrams()
             }
 
             if(game->state() == QProcess::NotRunning  && QString(datagram).contains("start"))
-                emit startGameProcess("glc-capture -f 30 -s -o ../fifos/stream ../darkplaces/darkplaces-linux-686-glx -basedir ../darkplaces/");
+                emit startGameProcess("glc-capture -f 30 -s -o ../fifos/stream ../darkplaces/darkplaces-linux-686-sdl -basedir ../darkplaces/");
         }
         else
         {
