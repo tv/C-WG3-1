@@ -1,28 +1,24 @@
-Install (ubuntu 9.10 32bit):
+#Server Install (ubuntu 9.10 32bit):
 
-sudo apt-get install build-essential libx11-dev libgl1-mesa-dev yasm libasound2-dev libxtst-dev
+sudo apt-get install build-essential libxtst-dev libqt4-dev qt4-qmake ffmpeg
+sudo apt-get install build-essential cmake libx11-dev libxxf86vm-dev libgl1-mesa-dev libasound2-dev libpng12-dev
 
-cd seom
-./configure && make && sudo make install
-cd ../yukon
-./configure && make && sudo make install
-cd ..
+#GLC compile
+cd server/glc/elfhacks
+cmake . && make && sudo make install
+cd ../packetstream
+cmake . && make && sudo make install
+cd ../glc
+ln -sf ../glc-support ./support
+cmake . && make && sudo make install
 
-mkdir -p ~/.yukon/system
-cp yukon/sysconf ~/.yukon/system/default
-cp confs/yukon/yukon.conf ~/.yukon/conf
+#inputserver compile
+cd ../../inputserver
+../scripts/mkfifo.sh
+qmake
+make
 
-Build+run Yunikorn (MJPEG-streamer):
-
-open project with netbeans
-compile project
-
-cd yunikorn/dist
-./mjpegserver.sh
-
-
-Running:
-
-cd darkplaces
-yukon ./darkplaces-linux-686-glx
-Press F8
+#run:
+#dont forget to provide authentic quake .pak:s to ../darkplaces/id1
+cd server/inputserver
+./inputserver

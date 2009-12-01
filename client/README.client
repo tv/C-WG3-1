@@ -1,1 +1,12 @@
-VLC:n plugins kansion t‰ytyy olla bin‰‰rin kanssa samassa hakemistossa
+# Ubuntu 9.10
+#  Compile:
+sudo apt-get install libvlc-dev libqt4-dev qt4-qmake
+qmake
+make
+
+#  Run:
+./Client
+
+
+#Compile under Windows:
+#VLC:n plugins kansion t‰ytyy olla bin‰‰rin kanssa samassa hakemistossa
